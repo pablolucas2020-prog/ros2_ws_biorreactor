@@ -8,7 +8,7 @@ from collections import defaultdict  # Para agrupar datos por id_dispositivo
 import statistics  # Para calcular medianas
 
 # URL de la API donde se publican los datos filtrados
-API_URL = "https://biorreactor-app-api.onrender.com/api/sensores"
+API_URL = "https://biorreactor-app.onrender.com/api/sensores"
 
 # Función para formatear valores numéricos con 2 decimales, o "N/A" si no válido
 def formato_seguro(value):
@@ -55,15 +55,15 @@ class NodoCentral(Node):
 
                 # Log de los datos recibidos
                 self.get_logger().info(
-                    f"✅ Dato recibido de {id_disp}:\n"
-                    f"🆔 ID: {id_disp} | "
+                    f"✅ Dato recibido de 🆔 {id_disp} en 🌐 {data.get('dominio')}\n"
                     f"🌡️ Temperatura: {formato_seguro(data.get('temperatura'))} °C | "
+                    f"☀️ Luz: {formato_seguro(data.get('luz'))} lux \n"
                     f"🌊 pH: {formato_seguro(data.get('ph'))} | "
-                    f"⚡ Voltaje pH: = {formato_seguro(data.get('voltaje_ph'))} V | "
+                    f"⚡ Voltaje pH: = {formato_seguro(data.get('voltaje_ph'))} V \n"
                     f"🧪 Turbidez: {formato_seguro(data.get('turbidez'))} % | "
-                    f"🫁 Oxígeno: {formato_seguro(data.get('oxigeno'))} % | "
-                    f"⚡ Conductividad: {formato_seguro(data.get('conductividad'))} ppm | "
-                    f"🌐 Dominio: {data.get('dominio')}\n"
+                    f"⚡ Voltaje turbidez: = {formato_seguro(data.get('voltaje_turb'))} V \n"
+                    f"🫁 Oxígeno: {formato_seguro(data.get('oxigeno'))} mg/L | "
+                    f"⚡ Voltaje oxígeno: = {formato_seguro(data.get('voltaje_o2'))} V \n"
                 )
             else:
                 self.get_logger().warn("⚠️ Mensaje recibido sin 'id_dispositivo'")
@@ -93,7 +93,7 @@ class NodoCentral(Node):
                     "ph": redondear(calcular_mediana(buffer, "ph")),
                     "turbidez": redondear(calcular_mediana(buffer, "turbidez")),
                     "oxigeno": redondear(calcular_mediana(buffer, "oxigeno")),
-                    "conductividad": redondear(calcular_mediana(buffer, "conductividad")),
+                    "luz": redondear(calcular_mediana(buffer, "luz")),
                 }
 
                 # Envío HTTP POST a la API
@@ -110,7 +110,7 @@ class NodoCentral(Node):
                 self.get_logger().info(
                     f"🆔 {id_disp} | Temperatura: {formato_seguro(datos_filtrados['temperatura'])}°C | "
                     f"pH: {formato_seguro(datos_filtrados['ph'])} | Turbidez: {formato_seguro(datos_filtrados['turbidez'])}% | "
-                    f"Oxígeno: {formato_seguro(datos_filtrados['oxigeno'])}% | Conductividad: {formato_seguro(datos_filtrados['conductividad'])}ppm"
+                    f"Oxígeno: {formato_seguro(datos_filtrados['oxigeno'])}mg/L | Luz: {formato_seguro(datos_filtrados['luz'])}lux"
                 )
 
                 # Limpia el buffer para ese dispositivo después de publicar
