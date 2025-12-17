@@ -6,9 +6,11 @@ import requests  # Para enviar HTTP POST
 from datetime import datetime
 from collections import defaultdict  # Para agrupar datos por id_dispositivo
 import statistics  # Para calcular medianas
+import requests
+
 
 # URL de la API donde se publican los datos filtrados
-API_URL = "https://192.168.1.100:500"
+API_URL = "http://192.168.1.100:5000/api/sensores"
 
 # Función para formatear valores numéricos con 2 decimales, o "N/A" si no válido
 def formato_seguro(value):
@@ -100,11 +102,12 @@ class NodoCentral(Node):
                 try:
                     response = requests.post(API_URL, json=datos_filtrados, timeout=5)
                     if response.status_code == 201:
-                        self.get_logger().info(f"[{ahora.strftime('%H:%M')}] ✅ Datos de {id_disp} enviados")
-                    else:
-                        self.get_logger().warn(f"[{ahora.strftime('%H:%M')}] ⚠️ Error al enviar {id_disp}: {response.status_code} - {response.text}")
-                except requests.RequestException as e:
-                    self.get_logger().error(f"❌ Error al enviar datos de {id_disp}: {e}")
+                        self.get_logger().info(f"Datos enviados a Flask ({id_disp})")
+                     else:
+                        self.get_logger().warn(f"Error Flask: {response.status_code}")
+                except Exception as e:
+                    self.get_logger().error(f"Error HTTP: {e}")
+
 
                 # Mostrar por consola lo enviado
                 self.get_logger().info(
