@@ -8,7 +8,7 @@ from collections import defaultdict  # Para agrupar datos por id_dispositivo
 import statistics  # Para calcular medianas
 
 # URL de la API donde se publican los datos filtrados
-API_URL = "https://biorreactor-app.onrender.com/api/sensores"
+API_URL = "https://192.168.1.100:500"
 
 # Función para formatear valores numéricos con 2 decimales, o "N/A" si no válido
 def formato_seguro(value):
